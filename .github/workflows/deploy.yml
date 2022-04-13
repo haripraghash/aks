@@ -1,3 +1,4 @@
+name: 'Deploy AKS infra'
 on:
   push:
     branches:
@@ -52,7 +53,7 @@ jobs:
           client-id: ${{ secrets.GH_AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.GH_AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.GH_AZURE_SUBSCRIPTION_ID }}
-          
+
     - name: Terraform Init
       id: init
       run: terraform init -input=false -backend-config='storage_account_name=${{ secrets.STORAGE_ACCOUNT_NAME}}' -backend-config='container_name=dev-tfstate' -backend-config='key=aks.dev.tfstate' -backend-config='access_key=${{ secrets.ACCESS_KEY}}'

@@ -1,31 +1,31 @@
 variable "bank" {
-  type = string
+  type    = string
   default = "pol"
 }
 
 variable "environment" {
-  type = string
+  type    = string
   default = "dev"
 }
 
 variable "location" {
-  type = string
+  type    = string
   default = "northeurope"
 }
 
 variable "parent_domain" {
   type = object({
-    domain = string
+    domain              = string
     resource_group_name = string
   })
   default = {
-    domain = "pollinate.dev"
+    domain              = "pollinate.dev"
     resource_group_name = "pol-nnprod-dns-rg"
   }
 }
 
 variable "app_time_zone" {
-  type = string
+  type    = string
   default = "UTC"
 }
 
@@ -40,10 +40,10 @@ variable "subnets" {
   })
   default = {
     subnet = {
-      aks              = [ "10.241.0.0/20" ]
-      hdinsights_kafka = [ "10.241.24.0/23" ]
-      piper_aks        = [ "10.241.16.0/21" ]
-      apim             = [ "10.241.28.0/22" ]
+      aks              = ["10.241.0.0/20"]
+      hdinsights_kafka = ["10.241.24.0/23"]
+      piper_aks        = ["10.241.16.0/21"]
+      apim             = ["10.241.28.0/22"]
     }
   }
 }
@@ -71,17 +71,17 @@ variable "tags" {
 }
 
 variable "dmz_prefix" {
-  type = string
+  type    = string
   default = "pol-nnprod"
 }
 
 variable "dmz_subscription_id" {
-  type = string
+  type    = string
   default = "ce38cf7c-3580-4375-b891-13a38abb98be"
 }
 
 variable "terratest" {
-  type = bool
+  type    = bool
   default = false
 }
 
@@ -91,7 +91,7 @@ variable "network" {
     vnet = list(string)
   })
   default = {
-    vnet = [ "10.241.0.0/18" ] # -- 183861242 addresses (minus 5 for Azure accounted for)
+    vnet = ["10.241.0.0/18"] # -- 183861242 addresses (minus 5 for Azure accounted for)
   }
 }
 

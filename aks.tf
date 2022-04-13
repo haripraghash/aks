@@ -14,7 +14,7 @@ variable "aks_nsg_rules" {
     destination_address_prefixes = list(string)
   }))
   default = [
-    
+
   ]
 }
 
@@ -39,7 +39,7 @@ variable "aks_default_pool" {
     node_count          = null
     vm_size             = "Standard_D2ds_v4" # -- must use VM sku with more than 2 cores and 4GB memory
     type                = "VirtualMachineScaleSets"
-    availability_zones  = [ "1", "2", "3" ]
+    availability_zones  = ["1", "2", "3"]
     max_pods            = 30
     node_labels         = {}
     enable_auto_scaling = true
@@ -47,7 +47,7 @@ variable "aks_default_pool" {
     max_count           = 10
     os_disk_size_gb     = 40
     os_disk_type        = "Ephemeral"
-    tags = {}
+    tags                = {}
   }
 }
 
@@ -64,15 +64,15 @@ variable "auto_scaler_profile" {
     scale_down_utilization_threshold = number
   })
   default = {
-    balance_similar_node_groups = false     # -- detect similar node groups and balance the number of nodes between them - defaults to false
-    max_graceful_termination_sec = 600      # -- maximum number of seconds the cluster autoscaler waits for pod termination when trying to scale down a node - defaults to 600
-    scale_down_delay_after_add = "10m"      # -- how long after the scale up of AKS nodes the scale down evaluation resumes - defaults to 10m
-    scale_down_delay_after_delete = "10s"   # -- how long after node deletion that scale down evaluation resume - defaults to the value used for scan_interval
-    scale_down_delay_after_failure = "3m"   # -- how long after scale down failure that scale down evaluation resumes - defaults to 3m
-    scan_interval = "10s"                   # -- how often the AKS Cluster should be re-evaluated for scale up/down - defaults to 10s
-    scale_down_unneeded = "10m"             # -- how long a node should be unneeded before it is eligible for scale down - defaults to 10m
-    scale_down_unready = "20m"              # -- how long an unready node should be unneeded before it is eligible for scale down - defaults to 20m
-    scale_down_utilization_threshold = 0.5  # -- node utilization level, defined as sum of requested resources divided by capacity, below which a node can be considered for scale down - defaults to 0.5
+    balance_similar_node_groups      = false # -- detect similar node groups and balance the number of nodes between them - defaults to false
+    max_graceful_termination_sec     = 600   # -- maximum number of seconds the cluster autoscaler waits for pod termination when trying to scale down a node - defaults to 600
+    scale_down_delay_after_add       = "10m" # -- how long after the scale up of AKS nodes the scale down evaluation resumes - defaults to 10m
+    scale_down_delay_after_delete    = "10s" # -- how long after node deletion that scale down evaluation resume - defaults to the value used for scan_interval
+    scale_down_delay_after_failure   = "3m"  # -- how long after scale down failure that scale down evaluation resumes - defaults to 3m
+    scan_interval                    = "10s" # -- how often the AKS Cluster should be re-evaluated for scale up/down - defaults to 10s
+    scale_down_unneeded              = "10m" # -- how long a node should be unneeded before it is eligible for scale down - defaults to 10m
+    scale_down_unready               = "20m" # -- how long an unready node should be unneeded before it is eligible for scale down - defaults to 20m
+    scale_down_utilization_threshold = 0.5   # -- node utilization level, defined as sum of requested resources divided by capacity, below which a node can be considered for scale down - defaults to 0.5
   }
 }
 
@@ -103,7 +103,7 @@ variable "additional_node_pool_subnets" {
 }
 
 variable "aks_api_server_authorized_ip_ranges" {
-  type    = list
+  type    = list(any)
   default = []
 }
 
@@ -135,7 +135,7 @@ variable "aks_oms_agent_enabled" {
 }
 
 variable "aks_azure_policy_enabled" {
-  type = bool
+  type    = bool
   default = false
 }
 
@@ -214,8 +214,8 @@ locals {
         name                                          = "${local.prefix}-${subnet.name}-snet"
         address_prefixes                              = subnet.address_prefixes
         enforce_private_link_service_network_policies = subnet.enforce_private_link_service_network_policies
-        nsg                                           = {
-          name = "${local.prefix}-${subnet.nsg.name}-nsg",
+        nsg = {
+          name  = "${local.prefix}-${subnet.nsg.name}-nsg",
           rules = subnet.nsg.rules
         }
       }
@@ -244,22 +244,22 @@ module "aks" {
     rules = var.aks_nsg_rules
   }
   aks_api_server_authorized_ip_ranges = var.aks_api_server_authorized_ip_ranges
-  default_pool                 = var.aks_default_pool
-  auto_scaler_profile          = var.auto_scaler_profile
-  additional_linux_node_pools  = local.flattened_platform_aks_additional_linux_node_pools
-  additional_node_pool_subnets = local.flattened_platform_additional_node_pool_subnets
-  azure_policy_enabled         = var.aks_azure_policy_enabled
-  oms_agent_enabled            = var.aks_oms_agent_enabled
-  kube_dashboard_enabled       = var.aks_kube_dashboard_enabled
-  enable_ip_prefix             = var.enable_ip_prefix
-  log_analytics_workspace_id   = data.azurerm_log_analytics_workspace.stack_log_analytics.id
+  default_pool                        = var.aks_default_pool
+  auto_scaler_profile                 = var.auto_scaler_profile
+  additional_linux_node_pools         = local.flattened_platform_aks_additional_linux_node_pools
+  additional_node_pool_subnets        = local.flattened_platform_additional_node_pool_subnets
+  azure_policy_enabled                = var.aks_azure_policy_enabled
+  oms_agent_enabled                   = var.aks_oms_agent_enabled
+  kube_dashboard_enabled              = var.aks_kube_dashboard_enabled
+  enable_ip_prefix                    = var.enable_ip_prefix
+  log_analytics_workspace_id          = data.azurerm_log_analytics_workspace.stack_log_analytics.id
   dns_zone = {
     id                = data.azurerm_dns_zone.stack_dns.id
     resource_group_id = data.azurerm_resource_group.stack_dns.id
   }
   acr_resource_id = data.azurerm_container_registry.acr.id
-  acr_name = data.azurerm_container_registry.acr.name
-  admin_group_ids = [ "3845fe50-7c25-4d70-be7f-3cdc3bc29ad2" ]
+  acr_name        = data.azurerm_container_registry.acr.name
+  admin_group_ids = ["3845fe50-7c25-4d70-be7f-3cdc3bc29ad2"]
 
   tags = {}
 }
