@@ -224,7 +224,7 @@ locals {
 }
 
 module "aks" {
-  source = "./modules/aks-with-spn/"
+  source = "github.com/haripraghash/tf-aks-with-spn.git?ref=master"
 
   name                = "${local.prefix}-aks"
   resource_group_name = "${local.prefix}-aks-rg"
