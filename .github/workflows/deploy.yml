@@ -2,9 +2,9 @@ name: 'Deploy AKS infra'
 on:
   push:
     branches:
-    - main
+    - master
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch:
     inputs:
       logLevel:
@@ -110,7 +110,7 @@ jobs:
           })
  
     - name: Terraform Apply
-      if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'workflow_dispatch'
+      if: (github.ref == 'refs/heads/master' && github.event_name == 'push') || github.event_name == 'workflow_dispatch'
       id: apply
       run: terraform apply --auto-approve
       continue-on-error: false
