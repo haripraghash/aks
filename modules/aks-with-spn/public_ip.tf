@@ -43,6 +43,7 @@ resource "azurerm_role_assignment" "aks_contributor_pip_rg" {
   role_definition_name = "Network Contributor"
   //principal_id         =  azurerm_user_assigned_identity.aks_identity.principal_id
   principal_id = azuread_application.aks.application_id
+  skip_service_principal_aad_check = true
 }
 
 resource "azurerm_role_assignment" "aks_contributor_vnet_rg" {

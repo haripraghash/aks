@@ -62,19 +62,6 @@ jobs:
       id: validate
       run: terraform validate
 
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - name: Test with Checkov
-      id: checkov
-      uses: bridgecrewio/checkov-action@master
-      with:
-        directory: .
-        framework: terraform 
-        quiet: true
-        soft_fail: true
-
     - name: Terraform Plan
       id: plan
       run: terraform plan -no-color
