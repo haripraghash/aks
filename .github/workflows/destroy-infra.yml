@@ -1,0 +1,42 @@
+name: "Destroy infrastructure"
+on: [workflow_dispatch]
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+    runs-on: ubuntu-latest
+    environment: dev
+ 
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: "./"
+ 
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - uses: hashicorp/setup-terraform@v1.3.2
+      with:
+        terraform_version: "=1.1.3"
+        terraform_wrapper: false
+    
+    - name: Terraform Init
+      id: init
+      run: terraform init -input=false -backend-config='storage_account_name=${{ secrets.STORAGE_ACCOUNT_NAME}}' -backend-config='container_name=dev-tfstate' -backend-config='key=aks.dev.tfstate' -backend-config='access_key=${{ secrets.ACCESS_KEY}}'
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate
+
+    - name: Terraform Destroy
+      id: apply
+      run: terraform destroy --auto-approve
+      continue-on-error: false
